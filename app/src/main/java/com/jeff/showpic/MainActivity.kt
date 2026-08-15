@@ -1,4 +1,4 @@
-package com.jocala.showpic
+package com.jeff.showpic
 
 import android.Manifest
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AbsListView
 import android.widget.BaseAdapter
 import android.widget.GridView
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         checkPermissionAndLoad()
     }
 

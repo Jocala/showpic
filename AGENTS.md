@@ -3,7 +3,7 @@
 ## Project
 Android app to browse and view pictures on an Amazon Echo Show (AEOCN).
 
-- **Package**: `com.jocala.showpic`
+- **Package**: `com.jeff.showpic`
 - **Target device**: Echo Show, 480x960 landscape, Android 7.1.2 (API 25)
 - **Min SDK**: 25 | **Target SDK**: 35 | **Compile SDK**: 35
 
@@ -11,7 +11,7 @@ Android app to browse and view pictures on an Amazon Echo Show (AEOCN).
 - Gradle wrapper 8.7 • AGP 8.5.2 • Kotlin 1.9.24
 - Build: `./gradlew assembleDebug`
 - Install & run: `adb -s 192.168.1.136:5555 install -r app/build/outputs/apk/debug/app-debug.apk`
-- Launch: `adb -s 192.168.1.136:5555 shell am start -n com.jocala.showpic/.MainActivity`
+- Launch: `adb -s 192.168.1.136:5555 shell am start -n com.jeff.showpic/.MainActivity`
 
 ## Architecture
 Two activities, no ViewModel, no fragments, no image loading library.
@@ -43,6 +43,7 @@ Two activities, no ViewModel, no fragments, no image loading library.
 - Invalid image path in viewer → `finishAffinity()`
 - Screen locked to landscape for both activities
 - Large images are downsampled to avoid OOM (161MB allocation crash on 1600x900 images is fixed)
+- Both activities set `FLAG_KEEP_SCREEN_ON` — screen never sleeps while app is foreground (Echo Show idle timeout was returning to launcher after 5 min)
 
 ## Dependencies (app/build.gradle.kts)
 - `androidx.core:core-ktx:1.13.1`
