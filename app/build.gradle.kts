@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.jeff.showpic"
+    namespace = "com.jocala.showpic"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.jeff.showpic"
+        applicationId = "com.jocala.showpic"
         minSdk = 25
         targetSdk = 35
         versionCode = 1

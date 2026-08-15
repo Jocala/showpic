@@ -1,4 +1,4 @@
-package com.jeff.showpic
+package com.jocala.showpic
 
 import android.Manifest
 import android.content.Intent
