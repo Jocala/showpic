@@ -4,11 +4,18 @@
 Android app to browse and view pictures on an Amazon Echo Show (AEOCN).
 
 - **Package**: `com.jocala.showpic`
+- **Version**: 1.1 (versionCode 2)
 - **Target device**: Echo Show, 480x960 landscape, Android 7.1.2 (API 25)
 - **Min SDK**: 25 | **Target SDK**: 35 | **Compile SDK**: 35
+- **Do not rename the package.** When the id moved to `com.jeff.showpic` and back
+  (`792fa02`, 2026-08-15) the external boot helper kept pointing at the old id and
+  silently stopped launching the app for ~2.5 months. Firmware-level references and
+  `persist.sys.*` props outlive a rename
 
 ## Build system
 - Gradle wrapper 8.7 • AGP 8.5.2 • Kotlin 1.9.24
+- Only a **debug** build exists (`assembleDebug`); there is no release signing config, so
+  the installed APK is `DEBUGGABLE` — fine for a sideloaded kiosk, not for distribution
 - Build: `./gradlew assembleDebug`
 - Install & run: `adb -s 192.168.1.136:5555 install -r app/build/outputs/apk/debug/app-debug.apk`
 - Launch: `adb -s 192.168.1.136:5555 shell am start -n com.jocala.showpic/.MainActivity`
@@ -41,6 +48,14 @@ Two activities plus a boot receiver, no ViewModel, no fragments, no image loadin
   API 29+ behaviour, so a boot receiver may start an activity here despite targetSdk 35
 - Replaced the third-party helper `com.autostart`, which fired at boot but still targeted
   the pre-rename id `com.jeff.showpic` and silently launched nothing (uninstalled 2026-11-01)
+- Manifest declares `RECEIVE_BOOT_COMPLETED` (install-time permission, no runtime prompt);
+  `READ_EXTERNAL_STORAGE` is still requested at runtime by `MainActivity`
+- **If showpic ever stops appearing at boot after a Fire OS OTA**, run
+  `logcat -b events -d | grep showpic` *before* touching code:
+  - `am_proc_start ... com.jocala.showpic/.BootReceiver` present → the broadcast arrived
+    and the fault is our launch (delay too short, or `startActivity` refused)
+  - absent → the platform stopped delivering `BOOT_COMPLETED` to this app; fall back to
+    `cmd package set-home-activity com.jocala.showpic/.MainActivity`
 
 ## Themes
 - `Theme.ShowPic` — `Theme.AppCompat.Light.DarkActionBar` (grid)
